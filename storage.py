@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from threading import Lock
 from typing import Any
 
-DATA_FILE = Path(__file__).resolve().parent / "server_data.json"
+if os.environ.get("VERCEL"):
+    DATA_FILE = Path("/tmp/server_data.json")
+else:
+    DATA_FILE = Path(__file__).resolve().parent / "server_data.json"
 _LOCK = Lock()
 
 

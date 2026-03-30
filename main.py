@@ -75,7 +75,8 @@ app.add_middleware(
 )
 
 FRONTEND_DIST = Path("frontend/dist")
-app.mount("/static", StaticFiles(directory=str(FRONTEND_DIST)), name="static")
+if FRONTEND_DIST.exists():
+    app.mount("/static", StaticFiles(directory=str(FRONTEND_DIST)), name="static")
 
 
 # ---------------------------------------------------------------------------
