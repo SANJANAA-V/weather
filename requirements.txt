@@ -1,0 +1,15 @@
+# CrisisIQ – Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Web framework
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+
+# HTTP client (async)
+httpx==0.27.0
+
+# Environment variable loading
+python-dotenv==1.0.1
+
+# Pydantic (bundled with FastAPI, pinned for compatibility)
+pydantic==2.12.5

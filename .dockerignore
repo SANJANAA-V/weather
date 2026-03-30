@@ -1,0 +1,16 @@
+.venv
+venv
+env
+ENV
+__pycache__
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+.DS_Store
+Thumbs.db
+.git
+.gitignore
+.dockerignore
+.env
+frontend/node_modules

@@ -1,0 +1,62 @@
+# CrisisIQ – Cloud Build configuration
+# Used by: gcloud builds submit --config cloudbuild.yaml
+#
+# Builds the Docker image and pushes it to Google Container Registry.
+# Then deploys the new image to Cloud Run automatically.
+#
+# Usage:
+#   gcloud builds submit \
+#     --config cloudbuild.yaml \
+#     --substitutions _REGION=asia-south1,_SERVICE=crisisiq,_WEATHER_API_KEY=xxx,_NEWS_API_KEY=yyy
+
+substitutions:
+  _REGION: asia-south1
+  _SERVICE: crisisiq
+  _WEATHER_API_KEY: ""
+  _NEWS_API_KEY: ""
+
+steps:
+  # Step 1: Build the Docker image
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Build"
+    args:
+      - "build"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/${_SERVICE}:$COMMIT_SHA"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/${_SERVICE}:latest"
+      - "."
+
+  # Step 2: Push the image to Google Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Push"
+    args:
+      - "push"
+      - "--all-tags"
+      - "gcr.io/$PROJECT_ID/${_SERVICE}"
+
+  # Step 3: Deploy to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: "Deploy"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "${_SERVICE}"
+      - "--image=gcr.io/$PROJECT_ID/${_SERVICE}:$COMMIT_SHA"
+      - "--region=${_REGION}"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--port=8080"
+      - "--memory=512Mi"
+      - "--cpu=1"
+      - "--min-instances=0"
+      - "--max-instances=5"
+      - "--set-env-vars=WEATHER_API_KEY=${_WEATHER_API_KEY},NEWS_API_KEY=${_NEWS_API_KEY}"
+
+images:
+  - "gcr.io/$PROJECT_ID/${_SERVICE}:$COMMIT_SHA"
+  - "gcr.io/$PROJECT_ID/${_SERVICE}:latest"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
