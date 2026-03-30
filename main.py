@@ -38,7 +38,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Application Lifecycle
 # ---------------------------------------------------------------------------
-agent_instance: CrisisIQAgent | None = None
+from typing import Optional
+agent_instance: Optional[CrisisIQAgent] = None
 
 
 @asynccontextmanager
@@ -117,8 +118,10 @@ async def analyze(
     - `Any disaster alerts near Chennai today?`
     - `What is the weather risk in Delhi?`
     """
+    global agent_instance
     if agent_instance is None:
-        raise HTTPException(status_code=503, detail="Agent not yet initialized. Please retry.")
+        logger.info("[Agent] Lazy loading agent for stateless environment")
+        agent_instance = CrisisIQAgent()
 
     logger.info(f"[API] /api/analyze called with query: '{q}'")
 
@@ -163,8 +166,9 @@ async def compare_cities(
         min_length=1,
     )
 ):
+    global agent_instance
     if agent_instance is None:
-        raise HTTPException(status_code=503, detail="Agent not yet initialized. Please retry.")
+        agent_instance = CrisisIQAgent()
 
     city_list = [city.strip() for city in cities.split(",") if city.strip()]
     if not city_list:
