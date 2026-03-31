@@ -14,6 +14,7 @@ from pathlib import Path
 from contextlib import asynccontextmanager
 
 # Load .env file automatically (no-op if not present, e.g. in Cloud Run)
+# New Vercel deployment triggered with saved environment variables.
 from dotenv import load_dotenv
 load_dotenv()
 
