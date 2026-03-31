@@ -2,7 +2,32 @@
   "profiles": {
     "mohamedjabri904@gmail.com": {
       "favorites": [],
-      "history": [],
+      "history": [
+        {
+          "location": "Antartica",
+          "risk_level": "LOW",
+          "risk_score": 0,
+          "timestamp": "2026-03-31T04:02:37.266Z"
+        },
+        {
+          "location": "Africa",
+          "risk_level": "HIGH",
+          "risk_score": 39,
+          "timestamp": "2026-03-31T04:00:42.432Z"
+        },
+        {
+          "location": "Brazil",
+          "risk_level": "LOW",
+          "risk_score": 6,
+          "timestamp": "2026-03-31T03:59:45.102Z"
+        },
+        {
+          "location": "Dubai",
+          "risk_level": "MEDIUM",
+          "risk_score": 22,
+          "timestamp": "2026-03-30T19:24:16.434Z"
+        }
+      ],
       "compare": []
     }
   }

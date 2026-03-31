@@ -86,11 +86,12 @@ if FRONTEND_DIST.exists():
 
 @app.get("/health", tags=["System"])
 async def health_check():
-    """Simple health check endpoint for Cloud Run readiness probes."""
+    """Simple health check endpoint for cloud readiness probes."""
     return {
         "status": "healthy",
         "agent": "CrisisIQ",
         "version": "1.0.0",
+        "environment": "vercel" if os.environ.get("VERCEL") else "local"
     }
 
 
@@ -180,11 +181,14 @@ async def compare_cities(
 
 @app.get("/{full_path:path}", tags=["UI"])
 async def root(full_path: str):
-    """Serve the built React frontend for CrisisIQ."""
+    """Serve the built React frontend logic or fallback for cloud."""
+    # Vercel handles static routing via vercel.json. We only provide a fallback here.
     index_file = FRONTEND_DIST / "index.html"
     if index_file.exists():
         return FileResponse(index_file)
+    
+    # Cloud environments usually have the static assets handled by the edge/router.
     return HTMLResponse(
-        "<h1>Frontend not built</h1><p>Run <code>npm install</code> and <code>npm run build</code> inside the frontend directory.</p>",
-        status_code=503,
+        "<h1>CrisisIQ API</h1><p>The dashboard is served via separate routing in production.</p>",
+        status_code=200,
     )
